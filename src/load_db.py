@@ -64,7 +64,7 @@ class DataLoader():
         splitter = RecursiveCharacterTextSplitter(
             chunk_size=512,
             chunk_overlap=20,
-            separators=["\n\n", "\n", "(?<=\. )", " ", ""]
+            separators=[r"\n\n", r"\n", r"(?<=\. )", " ", ""]
         )
 
         splitted_docs = splitter.split_documents(md_docs)
