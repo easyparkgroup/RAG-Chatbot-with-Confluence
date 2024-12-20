@@ -2,8 +2,7 @@ import collections
 
 from langchain.chains import RetrievalQA
 from langchain.prompts import PromptTemplate
-from langchain_community.embeddings import OpenAIEmbeddings
-from langchain_community.llms import OpenAI
+from langchain_openai import OpenAI, OpenAIEmbeddings
 
 import load_db
 
