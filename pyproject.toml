@@ -1,0 +1,31 @@
+[project]
+name = "rag-chatbot-with-confluence"
+version = "0.1.0"
+description = "RAG Chatbot with Confluence"
+readme = "README.md"
+authors = [ { name = "Frank Hoffsümmer", email = "frank.hoffsummer@easypark.net" } ]
+requires-python = ">=3.12"
+classifiers = [
+  "Programming Language :: Python :: 3 :: Only",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+]
+dependencies = [
+  "atlassian-python-api>=3.41.16",
+  "chromadb>=0.5.23",
+  "ffmpeg>=1.4",
+  "kaggle>=1.6.17",
+  "langchain-community>=0.3.13",
+  "langchain>=0.3.13",
+  "lark>=1.2.2",
+  "lxml>=5.3",
+  "markdownify>=0.14.1",
+  "openai>=1.58.1",
+  "pinecone-client>=5.0.1",
+  "pydub>=0.25.1",
+  "python-dotenv>=1.0.1",
+  "pytube>=15",
+  "streamlit>=1.41.1",
+  "tabulate>=0.9",
+  "yt-dlp>=2024.12.13",
+]

@@ -8,10 +8,10 @@
 
 # How to use
 
+- Make sure you have installed `uv`: https://docs.astral.sh/uv/getting-started/installation/
 - Create a virtual environnement:
-    - `python3.10 -m venv .venv`
+    - `uv lock && uv sync`
     - `source .venv/bin/activate`
-    - `pip install -r requirements.txt`
 
 - Copy the env.template and fill your environment variables
      - `cp .env.template .env`
