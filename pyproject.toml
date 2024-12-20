@@ -28,6 +28,8 @@ dependencies = [
   "streamlit>=1.41.1",
   "tabulate>=0.9",
   "yt-dlp>=2024.12.13",
+  "watchdog>=6.0.0",
+  "langchain-openai>=0.2.14",
 ]
 
 [dependency-groups]
