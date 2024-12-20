@@ -6,7 +6,7 @@ sys.path.append('../')
 from config import (CONFLUENCE_SPACE_NAME, CONFLUENCE_SPACE_KEY,
                     CONFLUENCE_USERNAME, CONFLUENCE_API_KEY, PERSIST_DIRECTORY)
 
-from langchain.document_loaders import ConfluenceLoader
+from langchain_community.document_loaders import ConfluenceLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.text_splitter import MarkdownHeaderTextSplitter
 
