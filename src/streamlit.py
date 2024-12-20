@@ -1,31 +1,17 @@
-# Streamlit
-# Use QARetrieval to find information about the Octo Confluence
-# Basic example with an improvement:
-# Add streaming
-# Add Conversation history
-# Optimize Splitter, Retriever,
-# Try Open source models
 import streamlit as st
 from help_desk import HelpDesk
 
-
-@st.cache_resource
-def get_model():
-    model = HelpDesk(new_db=True)
-    return model
-
-
-model = get_model()
+model = HelpDesk(new_db=True)
 
 # Streamlit
 if "messages" not in st.session_state:
-    st.session_state["messages"] = [{"role": "assistant", "content": "Comment puis-je vous aider ?"}]
+    st.session_state["messages"] = [{"role": "assistant", "content": "How can I help you?"}]
 
 for msg in st.session_state.messages:
     st.chat_message(msg["role"]).write(msg["content"])
 
 
-if prompt := st.chat_input("Comment puis-je vous aider ?"):
+if prompt := st.chat_input("How can I help you?"):
     # Add prompt
     st.session_state.messages.append({"role": "user", "content": prompt})
     st.chat_message("user").write(prompt)
