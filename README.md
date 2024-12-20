@@ -13,18 +13,10 @@
     - `uv lock && uv sync`
     - `source .venv/bin/activate`
 
-- Copy the env.template and fill your environment variables
+- Copy the `env.template` file and fill in the environment variables
      - `cp .env.template .env`
 
-- Check the `config.py` and `env.template` file.
-- To collect data from Confluence you will have to:
-  - Create your own Conluence space with page informations
-  - Create and feed your API key [here]('https://support.atlassian.com/atlassian-account/docs/manage-api-tokens-for-your-atlassian-account/')
-  - Insert in the  `env` file:
-    -  the space_key: `https://yoursite.atlassian.com/wiki/spaces/<space_key>/pages/`
-    -  the space_name: `<space_name>/spaces/<space_key>/pages/`
-    -  the email adress you used for your Confluence space
-    -  the OpenAI API key
+- Create your Confluence API key [here]('https://support.atlassian.com/atlassian-account/docs/manage-api-tokens-for-your-atlassian-account/')
 
 - To run the streamlit app run:
 ```
@@ -46,8 +38,6 @@ jupyter lab
 ```
 
 ## How it works ?
-
-
     .
     ├── data/
         ├── evaluation_dataset.tsv  # Questions and answers useful for evaluation
@@ -62,7 +52,6 @@ jupyter lab
         ├── evaluate.py             # Evaluate the RAG model based on questions-answers samples
 
     ├── notebooks/                  # Interactive code, useful for try and learn
-    ├── config.py
     ├── .env.template               # Environment variables to feed
     ├── .gitignore
     ├── LICENSE                     # MIT License
@@ -74,7 +63,7 @@ The process is the following:
 - Loading data from Confluence
   - You can keep the Markdown style using the `keep_markdown_format` option added in our [MR]('https://github.com/langchain-ai/langchain/pull/8246')
   - See the `help_desk.ipynb` for a more deep dive analysis
-  - Otherwise you cannot split text in a smart manner using the [MarkdownHeaderTextSplitter]('https://python.langchain.com/docs/modules/data_connection/document_transformers/text_splitters/markdown_header_metadata')
+  - Otherwise, you cannot split text in a smart manner using the [MarkdownHeaderTextSplitter]('https://python.langchain.com/docs/modules/data_connection/document_transformers/text_splitters/markdown_header_metadata')
 - Load data
 - Markdown and RecursiveCharacterTextSplitter
 - LLM used: Open AI LLM and embedding

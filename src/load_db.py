@@ -1,18 +1,14 @@
-import logging
-import shutil
-import sys
+import os
+import pickle
+from pathlib import Path
 
-sys.path.append("../")
+from dotenv import load_dotenv
 from langchain.text_splitter import MarkdownHeaderTextSplitter, RecursiveCharacterTextSplitter
 from langchain_community.document_loaders import ConfluenceLoader
+from langchain_community.vectorstores import Chroma
 
-from config import (
-    CONFLUENCE_API_KEY,
-    CONFLUENCE_SPACE_KEY,
-    CONFLUENCE_SPACE_NAME,
-    CONFLUENCE_USERNAME,
-    PERSIST_DIRECTORY,
-)
+load_dotenv()
+datadir = Path(__file__).parent.parent / "data"
 
 
 class DataLoader:
@@ -20,34 +16,42 @@ class DataLoader:
 
     def __init__(
         self,
-        confluence_url=CONFLUENCE_SPACE_NAME,
-        username=CONFLUENCE_USERNAME,
-        api_key=CONFLUENCE_API_KEY,
-        space_key=CONFLUENCE_SPACE_KEY,
-        persist_directory=PERSIST_DIRECTORY,
+        confluence_url=os.getenv("CONFLUENCE_BASE_URL"),
+        username=os.getenv("CONFLUENCE_USERNAME"),
+        api_key=os.getenv("CONFLUENCE_API_KEY"),
+        space_key=os.getenv("CONFLUENCE_SPACE_KEY"),
+        persist_directory=Path(__file__).parent.parent / "data",
     ):
         self.confluence_url = confluence_url
         self.username = username
         self.api_key = api_key
         self.space_key = space_key
-        self.persist_directory = persist_directory
+        self.persist_directory = persist_directory.as_posix()
 
     def load_from_confluence_loader(self):
         """Load HTML files from Confluence"""
-        loader = ConfluenceLoader(url=self.confluence_url, username=self.username, api_key=self.api_key)
-
-        docs = loader.load(
-            space_key=self.space_key,
-            # include_attachments=True,
+        loader = ConfluenceLoader(
+            url=self.confluence_url, username=self.username, api_key=self.api_key, space_key=self.space_key
         )
+        # Define the path to the pickle file
+        pickle_file = Path(datadir / "50_docs.pkl")
+        if pickle_file.exists():
+            docs = pickle.load(pickle_file.open("rb"))
+            print("Data loaded from pickle file.")
+        else:
+            docs = loader.load()
+            with pickle_file.open("wb") as f:
+                pickle.dump(docs, f)
+            print("Data written to pickle file.")
+
         return docs
 
     def split_docs(self, docs):
         # Markdown
         headers_to_split_on = [
-            ("#", "Titre 1"),
-            ("##", "Sous-titre 1"),
-            ("###", "Sous-titre 2"),
+            ("#", "Heading 1"),
+            ("##", "Heading 2"),
+            ("###", "Heading 3"),
         ]
         print(docs[0].page_content)
         markdown_splitter = MarkdownHeaderTextSplitter(headers_to_split_on=headers_to_split_on)
@@ -73,25 +77,17 @@ class DataLoader:
 
     def save_to_db(self, splitted_docs, embeddings):
         """Save chunks to Chroma DB"""
-        from langchain.vectorstores import Chroma
-
         db = Chroma.from_documents(splitted_docs, embeddings, persist_directory=self.persist_directory)
         db.persist()
         return db
 
     def load_from_db(self, embeddings):
         """Loader chunks to Chroma DB"""
-        from langchain.vectorstores import Chroma
-
         db = Chroma(persist_directory=self.persist_directory, embedding_function=embeddings)
         return db
 
     def set_db(self, embeddings):
         """Create, save, and load db"""
-        try:
-            shutil.rmtree(self.persist_directory)
-        except Exception as e:
-            logging.warning("%s", e)
 
         # Load docs
         docs = self.load_from_confluence_loader()
@@ -111,4 +107,5 @@ class DataLoader:
 
 
 if __name__ == "__main__":
-    pass
+    dl = DataLoader()
+    docs = dl.load_from_confluence_loader()

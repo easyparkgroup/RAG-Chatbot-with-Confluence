@@ -1,9 +1,13 @@
+from pathlib import Path
+
 import pandas as pd
 from dotenv import find_dotenv, load_dotenv
 from langchain.evaluation import EmbeddingDistance, load_evaluator
 
-from config import EVALUATION_DATASET
 from help_desk import HelpDesk
+
+datadir = Path(__file__).parent.parent / "data"
+EVALUATION_DATASET = datadir / "evaluation_dataset.tsv"
 
 
 def predict(model, question):
