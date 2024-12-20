@@ -1,10 +1,9 @@
-import os
 import pandas as pd
-from help_desk import HelpDesk
-from dotenv import load_dotenv, find_dotenv
-from langchain.evaluation import load_evaluator
-from langchain.evaluation import EmbeddingDistance
+from dotenv import find_dotenv, load_dotenv
+from langchain.evaluation import EmbeddingDistance, load_evaluator
+
 from config import EVALUATION_DATASET
+from help_desk import HelpDesk
 
 
 def predict(model, question):
@@ -19,18 +18,12 @@ def open_evaluation_dataset(filepath):
 
 def get_levenshtein_distance(model, reference_text, prediction_text):
     evaluator = load_evaluator("string_distance")
-    return evaluator.evaluate_strings(
-        prediction=prediction_text, reference=reference_text
-    )
+    return evaluator.evaluate_strings(prediction=prediction_text, reference=reference_text)
 
 
 def get_cosine_distance(model, reference_text, prediction_text):
-    evaluator = load_evaluator(
-        "embedding_distance", distance_metric=EmbeddingDistance.COSINE
-    )
-    return evaluator.evaluate_strings(
-        prediction=prediction_text, reference=reference_text
-    )
+    evaluator = load_evaluator("embedding_distance", distance_metric=EmbeddingDistance.COSINE)
+    return evaluator.evaluate_strings(prediction=prediction_text, reference=reference_text)
 
 
 def evaluate_dataset(model, dataset, verbose=True):
@@ -41,12 +34,8 @@ def evaluate_dataset(model, dataset, verbose=True):
         prediction_text = predict(model, row["Questions"])
 
         # Distances
-        levenshtein_distance = get_levenshtein_distance(
-            model, row["Réponses"].strip(), prediction_text.strip()
-        )
-        cosine_distance = get_cosine_distance(
-            model, row["Réponses"].strip(), prediction_text.strip()
-        )
+        levenshtein_distance = get_levenshtein_distance(model, row["Réponses"].strip(), prediction_text.strip())
+        cosine_distance = get_cosine_distance(model, row["Réponses"].strip(), prediction_text.strip())
 
         if verbose:
             print("\n QUESTIONS \n", row["Questions"])
@@ -68,7 +57,7 @@ def evaluate_dataset(model, dataset, verbose=True):
 
 def run():
     dataset = open_evaluation_dataset(EVALUATION_DATASET)
-    results = evaluate_dataset(model, dataset)
+    _results = evaluate_dataset(model, dataset)
 
 
 if __name__ == "__main__":

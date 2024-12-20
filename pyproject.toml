@@ -34,3 +34,22 @@ dependencies = [
 dev = [
     "ruff>=0.8.4",
 ]
+
+[tool.ruff]
+line-length = 120
+exclude = ["*.ipynb"]
+
+[tool.ruff.lint]
+# see https://docs.astral.sh/ruff/rules/
+select = [
+    "F", # pyflakes
+    "E", # Error
+    "W", # Warning
+    "I", # Isort
+    "W291", # trailing whitespace
+    "PTH", # flake8-use-pathlib
+]
+exclude = [
+    "__pycache__",
+    "*.ipynb"
+]

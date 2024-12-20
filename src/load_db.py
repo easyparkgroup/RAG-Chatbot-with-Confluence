@@ -1,19 +1,18 @@
-import sys
 import logging
 import shutil
+import sys
 
 sys.path.append("../")
+from langchain.text_splitter import MarkdownHeaderTextSplitter, RecursiveCharacterTextSplitter
+from langchain_community.document_loaders import ConfluenceLoader
+
 from config import (
-    CONFLUENCE_SPACE_NAME,
-    CONFLUENCE_SPACE_KEY,
-    CONFLUENCE_USERNAME,
     CONFLUENCE_API_KEY,
+    CONFLUENCE_SPACE_KEY,
+    CONFLUENCE_SPACE_NAME,
+    CONFLUENCE_USERNAME,
     PERSIST_DIRECTORY,
 )
-
-from langchain_community.document_loaders import ConfluenceLoader
-from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain.text_splitter import MarkdownHeaderTextSplitter
 
 
 class DataLoader:
@@ -35,9 +34,7 @@ class DataLoader:
 
     def load_from_confluence_loader(self):
         """Load HTML files from Confluence"""
-        loader = ConfluenceLoader(
-            url=self.confluence_url, username=self.username, api_key=self.api_key
-        )
+        loader = ConfluenceLoader(url=self.confluence_url, username=self.username, api_key=self.api_key)
 
         docs = loader.load(
             space_key=self.space_key,
@@ -53,9 +50,7 @@ class DataLoader:
             ("###", "Sous-titre 2"),
         ]
         print(docs[0].page_content)
-        markdown_splitter = MarkdownHeaderTextSplitter(
-            headers_to_split_on=headers_to_split_on
-        )
+        markdown_splitter = MarkdownHeaderTextSplitter(headers_to_split_on=headers_to_split_on)
 
         # Split based on markdown and add original metadata
         md_docs = []
@@ -80,9 +75,7 @@ class DataLoader:
         """Save chunks to Chroma DB"""
         from langchain.vectorstores import Chroma
 
-        db = Chroma.from_documents(
-            splitted_docs, embeddings, persist_directory=self.persist_directory
-        )
+        db = Chroma.from_documents(splitted_docs, embeddings, persist_directory=self.persist_directory)
         db.persist()
         return db
 
@@ -90,9 +83,7 @@ class DataLoader:
         """Loader chunks to Chroma DB"""
         from langchain.vectorstores import Chroma
 
-        db = Chroma(
-            persist_directory=self.persist_directory, embedding_function=embeddings
-        )
+        db = Chroma(persist_directory=self.persist_directory, embedding_function=embeddings)
         return db
 
     def set_db(self, embeddings):

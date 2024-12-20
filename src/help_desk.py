@@ -1,10 +1,11 @@
-import sys
-import load_db
 import collections
-from langchain.llms import OpenAI
+
 from langchain.chains import RetrievalQA
 from langchain.prompts import PromptTemplate
-from langchain.embeddings import OpenAIEmbeddings
+from langchain_community.embeddings import OpenAIEmbeddings
+from langchain_community.llms import OpenAI
+
+import load_db
 
 
 class HelpDesk:
@@ -38,9 +39,7 @@ class HelpDesk:
         return template
 
     def get_prompt(self) -> PromptTemplate:
-        prompt = PromptTemplate(
-            template=self.template, input_variables=["context", "question"]
-        )
+        prompt = PromptTemplate(template=self.template, input_variables=["context", "question"])
         return prompt
 
     def get_embeddings(self) -> OpenAIEmbeddings:
@@ -73,16 +72,11 @@ class HelpDesk:
         return answer["result"], sources
 
     def list_top_k_sources(self, answer, k=2):
-        sources = [
-            f'[{res.metadata["title"]}]({res.metadata["source"]})'
-            for res in answer["source_documents"]
-        ]
+        sources = [f'[{res.metadata["title"]}]({res.metadata["source"]})' for res in answer["source_documents"]]
 
         if sources:
             k = min(k, len(sources))
-            distinct_sources = list(zip(*collections.Counter(sources).most_common()))[
-                0
-            ][:k]
+            distinct_sources = list(zip(*collections.Counter(sources).most_common()))[0][:k]
             distinct_sources_str = "  \n- ".join(distinct_sources)
 
         if len(distinct_sources) == 1:
