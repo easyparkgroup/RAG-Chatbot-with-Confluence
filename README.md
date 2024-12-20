@@ -16,7 +16,14 @@
 - Copy the `env.template` file and fill in the environment variables
      - `cp .env.template .env`
 
-- Create your Confluence API key [here]('https://support.atlassian.com/atlassian-account/docs/manage-api-tokens-for-your-atlassian-account/')
+```bash
+OPENAI_API_KEY=<your_openai_api_key>
+CONFLUENCE_USERNAME=<your @easypark.net email>
+# create CONFLUENCE_API_KEY https://support.atlassian.com/atlassian-account/docs/manage-api-tokens-for-your-atlassian-account
+CONFLUENCE_API_KEY=<your_confluence_api_key>
+CONFLUENCE_BASE_URL=https://easypark.jira.com/wiki/
+CONFLUENCE_SPACE_KEY=EP # or any other space key
+```
 
 - To run the streamlit app run:
 ```
