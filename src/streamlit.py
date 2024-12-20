@@ -19,7 +19,9 @@ model = get_model()
 
 # Streamlit
 if "messages" not in st.session_state:
-    st.session_state["messages"] = [{"role": "assistant", "content": "Comment puis-je vous aider ?"}]
+    st.session_state["messages"] = [
+        {"role": "assistant", "content": "Comment puis-je vous aider ?"}
+    ]
 
 for msg in st.session_state.messages:
     st.chat_message(msg["role"]).write(msg["content"])
@@ -34,5 +36,7 @@ if prompt := st.chat_input("Comment puis-je vous aider ?"):
     result, sources = model.retrieval_qa_inference(prompt)
 
     # Add answer and sources
-    st.chat_message("assistant").write(result + '  \n  \n' + sources)
-    st.session_state.messages.append({"role": "assistant", "content": result + '  \n  \n' + sources})
+    st.chat_message("assistant").write(result + "  \n  \n" + sources)
+    st.session_state.messages.append(
+        {"role": "assistant", "content": result + "  \n  \n" + sources}
+    )

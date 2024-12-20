@@ -7,10 +7,10 @@ from langchain.prompts import PromptTemplate
 from langchain.embeddings import OpenAIEmbeddings
 
 
-class HelpDesk():
+class HelpDesk:
     """Create the necessary objects to create a QARetrieval chain"""
-    def __init__(self, new_db=True):
 
+    def __init__(self, new_db=True):
         self.new_db = new_db
         self.template = self.get_template()
         self.embeddings = self.get_embeddings()
@@ -24,7 +24,6 @@ class HelpDesk():
 
         self.retriever = self.db.as_retriever()
         self.retrieval_qa_chain = self.get_retrieval_qa()
-
 
     def get_template(self):
         template = """
@@ -40,8 +39,7 @@ class HelpDesk():
 
     def get_prompt(self) -> PromptTemplate:
         prompt = PromptTemplate(
-            template=self.template,
-            input_variables=["context", "question"]
+            template=self.template, input_variables=["context", "question"]
         )
         return prompt
 
@@ -60,7 +58,7 @@ class HelpDesk():
             chain_type="stuff",
             retriever=self.retriever,
             return_source_documents=True,
-            chain_type_kwargs=chain_type_kwargs
+            chain_type_kwargs=chain_type_kwargs,
         )
         return qa
 
@@ -82,7 +80,9 @@ class HelpDesk():
 
         if sources:
             k = min(k, len(sources))
-            distinct_sources = list(zip(*collections.Counter(sources).most_common()))[0][:k]
+            distinct_sources = list(zip(*collections.Counter(sources).most_common()))[
+                0
+            ][:k]
             distinct_sources_str = "  \n- ".join(distinct_sources)
 
         if len(distinct_sources) == 1:
