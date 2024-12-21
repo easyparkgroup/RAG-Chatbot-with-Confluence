@@ -31,6 +31,7 @@ dependencies = [
   "watchdog>=6.0.0",
   "langchain-openai>=0.2.14",
   "langchain-chroma>=0.1.4",
+  "altair>=5.5.0",
 ]
 
 [dependency-groups]

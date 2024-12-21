@@ -3,6 +3,7 @@ import os
 from datetime import datetime
 from pathlib import Path
 
+import altair as alt
 import pandas as pd
 import streamlit as st
 from atlassian import Confluence
@@ -18,7 +19,6 @@ datadir = Path(__file__).parent.parent / "data"
 
 # Initialize the Confluence client
 confluence = Confluence(url=base_url, username=username, password=api_token)
-
 
 def get_most_recently_modified_page(space_key):
     start = 0
@@ -87,15 +87,35 @@ pickle_file = Path(datadir / "spaces.pkl")
 df = get_data(pickle_file)
 display_df = df.copy()
 
-# create button to delete the pickle file
-if st.button("Delete pickle file"):
-    pickle_file.unlink()
-    st.write("Pickle file deleted. Reload the page to get fresh data.")
 
+col1, col2 = st.columns(2)
 
-# create toggle to hide personal spaces
-if st.checkbox("Hide personal spaces", value=True):
-    display_df = display_df[~display_df["space_type"].str.contains("personal", case=False)]
+with col1:
+    # create button to delete the pickle file
+    if st.button("Delete pickle file"):
+        pickle_file.unlink()
+        st.write("Pickle file deleted. Reload the page to get fresh data.")
+    # create toggle to hide personal spaces
+    if st.checkbox("Hide personal spaces", value=True):
+        display_df = display_df[~display_df["space_type"].str.contains("personal", case=False)]
+
+with col2:
+    # create an altair pie chart to show the distribution of space types
+    st.write("Distribution of space types")
+    space_type_counts = display_df["space_type"].value_counts().reset_index()
+    space_type_counts.columns = ["space_type", "count"]
+    bar_chart = (
+        alt.Chart(space_type_counts)
+        .mark_bar()
+        .encode(
+            x=alt.X(field="space_type", type="nominal", title="Space Type", sort="-y"),
+            y=alt.Y(field="count", type="quantitative", title="Count"),
+            color=alt.Color(field="space_type", type="nominal"),
+            tooltip=["space_type", "count"],
+        )
+    )
+
+    st.altair_chart(bar_chart)
 
 st.dataframe(
     display_df,
@@ -110,13 +130,6 @@ st.dataframe(
         # "last_modified": st.column_config.DatetimeColumn("Last Modified", width="medium"),
     },
 )
-
-# create a pie chart to show the distribution of space types
-st.write("Distribution of space types")
-space_type_counts = display_df["space_type"].value_counts()
-st.write(space_type_counts)
-st.bar_chart(space_type_counts)
-
 
 if __name__ == "__main__":
     get_data(pickle_file)
