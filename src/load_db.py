@@ -31,7 +31,12 @@ class DataLoader:
     def load_from_confluence_loader(self):
         """Load HTML files from Confluence"""
         loader = ConfluenceLoader(
-            url=self.confluence_url, username=self.username, api_key=self.api_key, space_key=self.space_key
+            url=self.confluence_url,
+            username=self.username,
+            api_key=self.api_key,
+            space_key=self.space_key,
+            limit=50,
+            max_pages=1000,
         )
         # Define the path to the pickle file
         pickle_file = Path(datadir / "50_docs.pkl")
