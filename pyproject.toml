@@ -30,6 +30,7 @@ dependencies = [
   "yt-dlp>=2024.12.13",
   "watchdog>=6.0.0",
   "langchain-openai>=0.2.14",
+  "langchain-chroma>=0.1.4",
 ]
 
 [dependency-groups]

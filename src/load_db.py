@@ -4,8 +4,8 @@ from pathlib import Path
 
 from dotenv import load_dotenv
 from langchain.text_splitter import MarkdownHeaderTextSplitter, RecursiveCharacterTextSplitter
+from langchain_chroma import Chroma
 from langchain_community.document_loaders import ConfluenceLoader
-from langchain_community.vectorstores import Chroma
 
 load_dotenv()
 datadir = Path(__file__).parent.parent / "data"
