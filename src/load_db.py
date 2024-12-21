@@ -78,7 +78,6 @@ class DataLoader:
     def save_to_db(self, splitted_docs, embeddings):
         """Save chunks to Chroma DB"""
         db = Chroma.from_documents(splitted_docs, embeddings, persist_directory=self.persist_directory)
-        db.persist()
         return db
 
     def load_from_db(self, embeddings):
