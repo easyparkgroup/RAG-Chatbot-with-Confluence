@@ -1,8 +1,8 @@
-# https://atlassian-python-api.readthedocs.io/confluence.html
 import os
 from pathlib import Path
 
 import altair as alt
+import pandas as pd
 import streamlit as st
 from dotenv import load_dotenv
 
@@ -24,15 +24,27 @@ display_df = df.copy()
 
 col1, col2 = st.columns(2)
 
-with col1:
-    # create button to delete the pickle file
-    if st.button("Delete pickle file"):
-        pickle_file.unlink()
-        st.write("Pickle file deleted. Reload the page to get fresh data.")
-    # create toggle to hide personal spaces
-    if st.checkbox("Hide personal spaces", value=True):
-        display_df = display_df[~display_df["space_type"].str.contains("personal", case=False)]
+# create toggle to hide personal spaces
+if st.checkbox("Hide personal spaces", value=True):
+    display_df = display_df[~display_df["space_type"].str.contains("personal", case=False)]
 
+with col1:
+    # create an altair bar chart to show the distribution of space last modified dates
+    st.write("Distribution of last modified dates")
+    display_df["last_modified"] = pd.to_datetime(display_df["last_modified"])
+    date_counts = display_df["last_modified"].dt.date.value_counts().reset_index()
+    date_counts.columns = ["date", "count"]
+    date_counts = date_counts.sort_values("date")
+    bar_chart = (
+        alt.Chart(date_counts)
+        .mark_bar()
+        .encode(
+            x=alt.X(field="date", type="temporal"),
+            y=alt.Y(field="count", type="quantitative"),
+            tooltip=["date", "count"],
+        )
+    )
+    st.altair_chart(bar_chart, use_container_width=True)
 with col2:
     # create an altair pie chart to show the distribution of space types
     st.write("Distribution of space types")
@@ -60,6 +72,7 @@ st.dataframe(
         "space_name": st.column_config.TextColumn("Space Name", width="medium"),
         "space_link": st.column_config.LinkColumn("Space Link", width="large"),
         "space_type": st.column_config.TextColumn("Space Type", width="small"),
-        # "last_modified": st.column_config.DatetimeColumn("Last Modified", width="medium"),
+        "page_count": st.column_config.NumberColumn("Page Count", width="small"),
+        "last_modified": st.column_config.DateColumn("Last Modified", width="medium"),
     },
 )

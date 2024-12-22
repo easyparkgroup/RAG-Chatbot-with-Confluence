@@ -43,7 +43,7 @@ def get_last_modified(space_key):
 
     mod_dates = sorted([p["history"].get("lastUpdated").get("when") for p in space_pages], reverse=True)
     last_modified = datetime.strptime(mod_dates[0], "%Y-%m-%dT%H:%M:%S.%fZ") if mod_dates else None
-    return space_key, last_modified
+    return space_key, len(space_pages), last_modified
 
 
 def get_all_spaces():
@@ -89,7 +89,7 @@ def get_spaces_data(pf):
             last_modified_dates = list(executor.map(rate_limited_get_most_recently_modified_page, space_keys))
 
         # create a DataFrame from the results
-        lmd = pd.DataFrame(last_modified_dates, columns=["space_key", "last_modified"])
+        lmd = pd.DataFrame(last_modified_dates, columns=["space_key", "page_count", "last_modified"])
         # join the last modified dates with the space data
         df = spaces_df.merge(lmd, on="space_key")
         # save the data to a pickle file
