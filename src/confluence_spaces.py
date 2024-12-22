@@ -15,10 +15,10 @@ username = os.getenv("CONFLUENCE_USERNAME")
 api_token = os.getenv("CONFLUENCE_API_KEY")
 base_url = os.getenv("CONFLUENCE_BASE_URL").rstrip("/")
 datadir = Path(__file__).parent.parent / "data"
-pickle_file = Path(datadir / "spaces.pkl")
+datafile = Path(datadir / "confluence_spaces.csv")
 
 
-df = get_spaces_data(pickle_file)
+df = get_spaces_data(datafile)
 display_df = df.copy()
 
 

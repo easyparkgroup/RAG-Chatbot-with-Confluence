@@ -18,7 +18,7 @@ username = os.getenv("CONFLUENCE_USERNAME")
 api_token = os.getenv("CONFLUENCE_API_KEY")
 base_url = os.getenv("CONFLUENCE_BASE_URL").rstrip("/")
 datadir = Path(__file__).parent.parent / "data"
-pickle_file = Path(datadir / "spaces.pkl")
+datafile = Path(datadir / "confluence_spaces.csv")
 
 # Initialize the Confluence client
 ep_confluence = Confluence(url=base_url, username=username, password=api_token)
@@ -71,9 +71,9 @@ def get_all_spaces():
         start += 100
 
 
-def get_spaces_data(pf):
+def get_spaces_data(csv_file):
     # Load from pickle if it exists, otherwise write to it
-    if not pf.exists():
+    if not csv_file.exists():
         spaces_df = pd.DataFrame(list(get_all_spaces()))
         space_keys = spaces_df["space_key"].tolist()
         rate_limit = 5
@@ -93,10 +93,10 @@ def get_spaces_data(pf):
         # join the last modified dates with the space data
         df = spaces_df.merge(lmd, on="space_key")
         # save the data to a pickle file
-        df.to_pickle(pickle_file)
+        df.to_pickle(csv_file)
         print("Data written to pickle file.")
     else:
-        df = pd.read_pickle(pf)
+        df = pd.read_pickle(csv_file)
         print("Data loaded from pickle file.")
     return df
 
@@ -106,5 +106,5 @@ if __name__ == "__main__":
     pd.set_option("display.width", 1000)
     pd.set_option("display.max_colwidth", 1000)
 
-    all_spaces = get_spaces_data(pickle_file)
+    all_spaces = get_spaces_data(datafile)
     print(all_spaces.head(25))
