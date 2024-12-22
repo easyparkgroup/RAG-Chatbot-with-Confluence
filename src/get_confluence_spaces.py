@@ -92,12 +92,12 @@ def get_spaces_data(csv_file):
         lmd = pd.DataFrame(last_modified_dates, columns=["space_key", "page_count", "last_modified"])
         # join the last modified dates with the space data
         df = spaces_df.merge(lmd, on="space_key")
-        # save the data to a pickle file
-        df.to_pickle(csv_file)
-        print("Data written to pickle file.")
+        # save the data to a csv file
+        df.to_csv(csv_file, index=False)
+        print("Data written to csv file.")
     else:
-        df = pd.read_pickle(csv_file)
-        print("Data loaded from pickle file.")
+        df = pd.read_csv(csv_file)
+        print("Data loaded from csv file.")
     return df
 
 
