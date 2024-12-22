@@ -30,7 +30,7 @@ def get_last_modified(space_key):
     space_pages = []
     while True:
         pages = ep_confluence.get_all_pages_from_space(
-            space=space_key, start=start, limit=100, expand="history.lastUpdated"
+            space=space_key, start=start, status="current", limit=100, expand="history.lastUpdated"
         )
         # Break the loop if no more pages are turned
         if not pages:
