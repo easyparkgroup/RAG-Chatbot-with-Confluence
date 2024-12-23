@@ -41,3 +41,17 @@ def test_get_last_modified_date():
     space_key = "RND"
     print()
     print(get_last_modified(space_key))
+
+
+def test_space_pages_count(confluence_client):
+    # Define the CQL query
+    space_key = "RND"
+    ep_confluence = confluence_client
+
+    cql = f"type=page AND space={space_key}"
+
+    # Submit the CQL query
+    results = ep_confluence.cql(cql, limit=1000)  # Fetching only metadata for count
+    total_results = results.get("size", 0)
+
+    print(f"Total non-archived pages in space '{space_key}': {total_results}")
