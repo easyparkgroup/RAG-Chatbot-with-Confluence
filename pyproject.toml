@@ -11,12 +11,17 @@ classifiers = [
   "Programming Language :: Python :: 3.13",
 ]
 dependencies = [
+  "altair>=5.5.0",
   "atlassian-python-api>=3.41.16",
   "chromadb>=0.5.23",
   "ffmpeg>=1.4",
   "kaggle>=1.6.17",
+  "langchain-chroma>=0.1.4",
   "langchain-community>=0.3.13",
+  "langchain-openai>=0.2.14",
+  "langchain-text-splitters>=0.3.4",
   "langchain>=0.3.13",
+  "langgraph>=0.2.60",
   "lark>=1.2.2",
   "lxml>=5.3",
   "markdownify>=0.14.1",
@@ -27,11 +32,8 @@ dependencies = [
   "pytube>=15",
   "streamlit>=1.41.1",
   "tabulate>=0.9",
-  "yt-dlp>=2024.12.13",
   "watchdog>=6.0.0",
-  "langchain-openai>=0.2.14",
-  "langchain-chroma>=0.1.4",
-  "altair>=5.5.0",
+  "yt-dlp>=2024.12.13",
 ]
 
 [dependency-groups]
